@@ -63,7 +63,7 @@ class SafeService:
         try:
             creation_internal_tx = InternalTx.objects.filter(
                 ethereum_tx__status=1  # Ignore Internal Transactions for failed Transactions
-            ).select_related('ethereum_tx__block').get(contract_address=safe_address)
+            ).select_related('ethereum_tx__block').get(contract_address=safe_address.lower())
 
             previous_internal_tx = self._get_previous_internal_tx(creation_internal_tx)
 

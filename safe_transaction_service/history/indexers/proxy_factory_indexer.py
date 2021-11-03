@@ -75,7 +75,7 @@ class ProxyFactoryIndexer(EthereumIndexer):
           'removed': False}
         ]
         """
-        logger.debug('Searching for Proxy deployments from block-number=%d to block-number=%d - Proxies=%s',
+        logger.info('Searching for Proxy deployments from block-number=%d to block-number=%d - Proxies=%s',
                      from_block_number, to_block_number, addresses)
 
         logs = self.ethereum_client.w3.eth.getLogs({'address': addresses,
@@ -84,7 +84,7 @@ class ProxyFactoryIndexer(EthereumIndexer):
                                                     'toBlock': to_block_number})
 
         # Log INFO if erc events found, DEBUG otherwise
-        logger_fn = logger.info if logs else logger.debug
+        logger_fn = logger.info 
         logger_fn('Found %d proxy deployments through Proxy Factory between block-number=%d and block-number=%d',
                   len(logs), from_block_number, to_block_number)
         return logs

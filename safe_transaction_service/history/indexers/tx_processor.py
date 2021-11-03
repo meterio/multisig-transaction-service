@@ -211,7 +211,7 @@ class SafeTxProcessor(TxProcessor):
             self.clear_cache(contract_address)
         elif function_name in ('addOwnerWithThreshold', 'removeOwner', 'removeOwnerWithThreshold'):
             logger.debug('Processing owner/threshold modification')
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             safe_status.threshold = arguments['_threshold']
             owner = arguments['owner']
             if function_name == 'addOwnerWithThreshold':
@@ -223,34 +223,34 @@ class SafeTxProcessor(TxProcessor):
             logger.debug('Processing owner swap')
             old_owner = arguments['oldOwner']
             new_owner = arguments['newOwner']
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             self.remove_owner(internal_tx, safe_status, old_owner)
             safe_status.owners.append(new_owner)
             self.store_new_safe_status(safe_status, internal_tx)
         elif function_name == 'changeThreshold':
             logger.debug('Processing threshold change')
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             safe_status.threshold = arguments['_threshold']
             self.store_new_safe_status(safe_status, internal_tx)
         elif function_name == 'changeMasterCopy':
             logger.debug('Processing master copy change')
             # TODO Ban address if it doesn't have a valid master copy
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             safe_status.master_copy = arguments['_masterCopy']
             self.store_new_safe_status(safe_status, internal_tx)
         elif function_name == 'setFallbackHandler':
             logger.debug('Setting FallbackHandler')
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             safe_status.fallback_handler = arguments['handler']
             self.store_new_safe_status(safe_status, internal_tx)
         elif function_name == 'enableModule':
             logger.debug('Enabling Module')
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             safe_status.enabled_modules.append(arguments['module'])
             self.store_new_safe_status(safe_status, internal_tx)
         elif function_name == 'disableModule':
             logger.debug('Disabling Module')
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             safe_status.enabled_modules.remove(arguments['module'])
             self.store_new_safe_status(safe_status, internal_tx)
         elif function_name == 'execTransactionFromModule':
@@ -315,7 +315,7 @@ class SafeTxProcessor(TxProcessor):
                 multisig_confirmation.save(update_fields=['ethereum_tx'])
         elif function_name == 'execTransaction':
             logger.debug('Processing transaction execution')
-            safe_status = self.get_last_safe_status_for_address(contract_address)
+            safe_status = self.get_last_safe_status_for_address(contract_address.lower())
             nonce = safe_status.nonce
             if 'baseGas' in arguments:  # `dataGas` was renamed to `baseGas` in v1.0.0
                 base_gas = arguments['baseGas']
