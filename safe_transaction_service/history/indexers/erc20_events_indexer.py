@@ -38,7 +38,7 @@ class Erc20EventsIndexer(EthereumIndexer):
     def __init__(self, ethereum_client: EthereumClient,
                  block_process_limit: int = 10000,
                  updated_blocks_behind: int = 300,  # For last 300 blocks, process `query_chunk_size` Safes together
-                 query_chunk_size: int = 500,
+                 query_chunk_size: int = 20,
                  *args, **kwargs):
         super().__init__(ethereum_client,
                          block_process_limit=block_process_limit,
@@ -76,7 +76,7 @@ class Erc20EventsIndexer(EthereumIndexer):
         #                                                                        to_block_number)
         # else:
         logger.info('Filtering for erc20/721 events from block-number=%d to block-number=%d - '
-                     'Number of Safes=%d addresses=%s', from_block_number, to_block_number, addresses_len, addresses)
+                    'Number of Safes=%d addresses=%s', from_block_number, to_block_number, addresses_len, addresses)
         erc20_transfer_events = self._find_elements_using_transfer_topics(addresses, from_block_number, to_block_number)
 
         len_erc20_transfer_events = len(erc20_transfer_events)
