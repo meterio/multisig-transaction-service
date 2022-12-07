@@ -131,7 +131,10 @@ class SafeTxProcessor(TxProcessor):
         """
         contract_address = internal_tx._from
         try:
-            safe_status.owners.remove(owner)
+            try:
+                safe_status.owners.remove(owner)
+            except ValueError as e:
+                pass
             MultisigConfirmation.objects.remove_unused_confirmations(contract_address, safe_status.nonce, owner)
         except ValueError as e:
             logger.error('Error processing trace=%s for contract=%s with tx-hash=%s. Cannot remove owner=%s',
